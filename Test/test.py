@@ -51,8 +51,9 @@ def testData():
     myDataSetTest = MyDataSet(text_test, False, tokenizer)
 
     # 没啥好说的，暂时batch只能是1
-    batch_size = 1
+    batch_size = 16
     train = DataLoader(myDataSetTrain, batch_size=batch_size, shuffle=True)
+    print(len(train))
 
     train, label = next(iter(train))
     '''
@@ -79,10 +80,10 @@ def testData():
     #     print("title:\n", train[1]['input_ids'][x], train[1]['token_type_ids'][x], train[1]['attention_mask'][x])
     #     print("assignee:\n", train[2]['input_ids'][x], train[2]['token_type_ids'][x], train[2]['attention_mask'][x])
     #     print("abstract:\n", train[3]['input_ids'][x], train[3]['token_type_ids'][x], train[3]['attention_mask'][x])
-    model = BertForSequenceClassification.from_pretrained('../bert', num_labels=36)
-    print(train[1]['input_ids'], train[1]['attention_mask'], label)
-    output = model(train[1]['input_ids'], train[1]['attention_mask'], labels=label)
-    print(output)
+    # model = BertForSequenceClassification.from_pretrained('../bert', num_labels=36)
+    # print(train[1]['input_ids'], train[1]['attention_mask'], label)
+    # output = model(train[1]['input_ids'], train[1]['attention_mask'], labels=label)
+    # print(output)
 
 
 def mulTest():
@@ -97,5 +98,5 @@ def mulTest():
 
 if __name__ == '__main__':
     # tokenTest()
-    # testData()
-    mulTest()
+    testData()
+    # mulTest()

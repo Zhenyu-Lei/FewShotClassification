@@ -12,10 +12,10 @@ class TripleBert(nn.Module):
         self.model3 = BertForSequenceClassification.from_pretrained('./bert', num_labels=num_labels)  # 36类样本
         self.a = torch.rand([3])
 
-    def forward(self, title, assignee, abstract, label):
-        vec1 = self.model1(title['input_ids'], title['attention_mask'], labels=label)[1]
-        vec2 = self.model2(assignee['input_ids'], assignee['attention_mask'], labels=label)[1]
-        vec3 = self.model3(abstract['input_ids'], abstract['attention_mask'], labels=label)[1]
+    def forward(self, title, assignee, abstract, label, device):
+        vec1 = self.model1(title['input_ids'].to(device), title['attention_mask'].to(device), labels=label)[1]
+        vec2 = self.model2(assignee['input_ids'].to(device), assignee['attention_mask'].to(device), labels=label)[1]
+        vec3 = self.model3(abstract['input_ids'].to(device), abstract['attention_mask'].to(device), labels=label)[1]
         '''
         logits=tensor([[ 0.7125, -0.5636,  0.2447, -0.2928,  0.0176,  0.5130,  0.2257, -0.0662,
           0.1515, -0.6435, -0.4010, -1.2344,  0.1434, -0.4420,  0.3731,  0.3463,
@@ -23,4 +23,4 @@ class TripleBert(nn.Module):
          -0.3855, -0.1398,  0.1992,  0.0995, -0.4023, -0.2450,  0.5737,  0.5621,
           0.1754,  0.3666,  0.3109, -0.2609]], grad_fn=<AddmmBackward0>)
           '''
-        return vec1*self.a[0]+vec2*self.a[1]+vec3*self.a[2]
+        return vec1 * self.a[0] + vec2 * self.a[1] + vec3 * self.a[2]

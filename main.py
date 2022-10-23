@@ -30,6 +30,13 @@ test_loader = DataLoader(myDataSetTest, batch_size=batch_size, shuffle=True)
 
 # 由于这里是文本分类任务，所以直接使用BertForSequenceClassification完成加载即可，这里需要制定对应的类别数量。
 model1 = TripleBert(num_labels=36)  # 36类样本
+
+try:
+    f = open("./model.pth")
+    model1.load_state_dict(torch.load("./model.pth"))
+except FileNotFoundError:
+    print("预训练文件不存在")
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model1.to(device)
 
@@ -46,13 +53,14 @@ def train():
     model1.train()
     total_train_loss = 0
     iter_num = 0
-    total_iter = batch_size
+    total_iter = len(train_loader)
     for batch, labels in train_loader:
         # 正向传播
         title = batch[1]
         assignee = batch[2]
         abstract = batch[3]
-        outputs = model1(title, assignee, abstract, labels)
+        labels = labels.to(device)
+        outputs = model1(title, assignee, abstract, labels, device)
         loss = loss_fn(outputs, labels)
         total_train_loss += loss
 
@@ -83,7 +91,8 @@ def validation():
             title = batch[1]
             assignee = batch[2]
             abstract = batch[3]
-            outputs = model1(title, assignee, abstract, labels)
+            labels = labels.to(device)
+            outputs = model1(title, assignee, abstract, labels, device)
 
         loss = loss_fn(outputs, labels)
 
