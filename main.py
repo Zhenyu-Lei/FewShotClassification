@@ -1,14 +1,14 @@
-import torch
 import json
 
+import torch
+from sklearn.model_selection import train_test_split
 from torch import nn
-from DataSet import MyDataSet
 from torch.utils.data import DataLoader
-import numpy as np
+from transformers import AdamW, get_linear_schedule_with_warmup
 # transformers bert相关的模型使用和加载
 from transformers import BertTokenizer
-from transformers import BertForSequenceClassification, AdamW, get_linear_schedule_with_warmup
-from sklearn.model_selection import train_test_split
+
+from DataSet import MyDataSet
 from Model.TripleBert import TripleBert
 
 # 分词器
@@ -100,3 +100,5 @@ for epoch in range(4):
     print("------------Epoch: %d ----------------" % epoch)
     train()
     validation()
+
+torch.save(model1.state_dict(), "model.pth")
